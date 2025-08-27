@@ -1,0 +1,56 @@
+1. MongoDB
+	• MongoDB is a NoSQL database.
+	• Instead of storing data in tables like SQL, it stores data in collections with documents (JSON-like objects).
+	• Example document in MongoDB:
+
+
+{
+  "name": "Ujjawal Kumar",
+  "email": "ujjawalkumar@example.com",
+  "age": 20
+}
+
+	• Pros:
+		○ Flexible schema (you can add/remove fields anytime)
+		○ Good for storing JSON-like data
+		○ Works well with Node.js
+
+
+2. Mongoose
+	• Mongoose is an ODM (Object Data Modeling) library for Node.js.
+	• Think of it as a helper library that makes MongoDB easier to use.
+	• It provides:
+		1. Schema definition → define the structure of documents
+		2. Validation → make sure data is correct
+		3. Methods → for querying, updating, deleting data easily
+
+
+3. Why we use Mongoose with MongoDB
+	• MongoDB is schema-less by default → you can accidentally save wrong or inconsistent data.
+	• Mongoose lets you define a schema for your documents → safer and easier to work with.
+	• Example with Mongoose:
+
+
+const mongoose = require("mongoose");
+
+// 1. Define a schema
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  age: Number
+});
+
+// 2. Create a model
+const User = mongoose.model("User", userSchema);
+
+// 3. Use the model to interact with MongoDB
+const newUser = new User({ name: "Ujjawal", email: "ujjawal@example.com", age: 20 });
+await newUser.save(); // saves in MongoDB
+
+
+
+✅ In short:
+Term	Meaning
+MongoDB	Database that stores JSON-like documents
+Mongoose	Node.js library to interact with MongoDB easily
+ODM	Object Data Modeling → lets you define models & schemas to work with MongoDB in an organized way

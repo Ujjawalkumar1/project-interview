@@ -1,0 +1,98 @@
+1. routes/ folder
+	• In a Node.js/Express project, we organize API routes in a folder called routes/.
+	• Routes are like addresses or paths on your server where clients (like your React app) can send requests.
+
+2. userRoute.js
+	• This file contains all the endpoints related to users.
+	• Example endpoints:
+		○ POST /signup → create a new user
+		○ POST /login → login user
+		○ GET /profile → get user info
+It basically handles user authentication (who can log in or sign up).
+
+3. messageRoute.js
+	• This file contains all the endpoints related to messages.
+	• Example endpoints:
+		○ POST /message → send a message
+		○ GET /messages → get messages for a user
+It handles message sending and receiving.
+
+4. "Maps HTTP methods to controller functions"
+	• Each route defines what function should run when a client makes a request.
+	• Example:
+
+
+router.post("/login", loginUser); // POST request → run loginUser function
+router.get("/messages", getMessages); // GET request → run getMessages function
+
+	• HTTP methods like GET, POST, PUT, DELETE tell the server what action the client wants.
+	• Controller functions are the functions that actually do the work (like check login, save a message, etc.).
+
+✅ Simple analogy:
+Concept	Analogy
+routes/ folder	Map of all streets in a city
+userRoute.js	Streets related to “users”
+messageRoute.js	Streets related to “messages”
+HTTP method + route	Street + traffic sign → decides where to go
+Controller function	The person who actually does the job at that street
+
+If you want, I can also draw a tiny diagram showing routes → HTTP method → controller function → response. It makes it super easy to visualize.
+Do you want me to do that?
+You said:
+what is end point , route , route handeling etc for interview purpose 
+ChatGPT said:
+Alright Ujjawal, let’s break these clearly for interview purpose. I’ll explain in simple words and also give examples.
+
+1. Endpoint
+Meaning:
+	• An endpoint is the specific URL on the server where a client (like your React app or Postman) can send a request.
+	• It’s where the server listens and responds.
+Example:
+	• https://example.com/api/login → this is an endpoint for login.
+	• https://example.com/api/messages → this is an endpoint for getting messages.
+Interview way to say it:
+	“An endpoint is a URL exposed by the backend where clients can send requests to access specific resources or perform actions.”
+
+2. Route
+Meaning:
+	• A route is the path on the server that maps a request to a function.
+	• Think of it as the server’s “address book” for handling requests.
+Example in Express:
+
+
+app.get("/messages", getMessages);
+app.post("/login", loginUser);
+	• /messages and /login are routes.
+	• getMessages and loginUser are functions that run when route is hit.
+Interview way to say it:
+	“A route defines the URL path and HTTP method on the server and tells it which function to execute when that path is requested.”
+
+3. Route Handling (Route Handler)
+Meaning:
+	• Route handling is the process of writing functions that respond to requests at a specific route.
+	• The function that executes for a route is called a route handler.
+Example:
+
+
+// Route handling function
+function loginUser(req, res) {
+    const { email, password } = req.body;
+    // logic to check user
+    res.json({ message: "Logged in!" });
+}
+// Route mapping
+app.post("/login", loginUser);
+	• loginUser → route handler
+	• /login → route
+	• Client hitting /login → endpoint
+Interview way to say it:
+	“Route handling is the mechanism of defining functions that process requests to specific routes and send back responses.”
+
+✅ Quick Summary Table for Interviews
+Term	Meaning	Example
+Endpoint	Full URL where the client sends requests	https://api.example.com/login
+Route	Path on the server with HTTP method	/login (POST)
+Route Handler	Function that runs when route is requested	loginUser(req, res)
+
+If you want, I can also give a very short MERN stack example showing endpoint, route, and route handler in one diagram — perfect for interviews.
+Do you want me to do that?

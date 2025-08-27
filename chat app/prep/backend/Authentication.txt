@@ -1,0 +1,184 @@
+1. Authentication (basic idea)
+When you log in to a website/app (like Gmail, Netflix, etc.), the system needs to know who you are for every request you make after login. That’s called authentication.
+
+2. Traditional (stateful) authentication
+Normally, when you log in, the server stores your session info in memory or database (called state).
+	• Example: You log in → server creates a “session record” → gives you a session ID → you send it in every request.
+	• Problem: Server has to remember sessions for all users. If the server restarts or scales to multiple servers, it becomes difficult.
+
+3. JWT (JSON Web Token)
+JWT is just a token (a string) that contains:
+	• Who you are (user ID, email, etc.)
+	• Some extra info (roles, expiry time, etc.)
+	• A digital signature to make sure it’s not tampered.
+It looks like this:
+
+
+xxxxx.yyyyy.zzzzz
+
+4. Stateless authentication with JWT
+“Stateless” means the server does not remember anything about you.
+	• When you log in, the server gives you a JWT.
+	• You send that JWT in every request (usually in the Authorization header).
+	• The server checks the signature and reads info directly from the token — no need to check any session storage.
+So the state is inside the token itself, not stored on the server.
+
+✅ Simple analogy:
+	• Stateful: You go to a club, and the guard writes your name in a register (server keeps state). Every time you enter, he checks the register.
+	• Stateless with JWT: Instead of keeping a register, the guard gives you a stamp on your hand (JWT). Next time you enter, he only checks the stamp. The club doesn’t keep any list.
+
+👉 That’s why JWT-based stateless authentication is popular for APIs and scalable systems — the server doesn’t need to remember who you are; it just verifies your token.
+
+Do you want me to also give you a short flow diagram of how JWT login works (step by step)?
+You said:
+"3. JWT (JSON Web Token) JWT is just a token (a string) that contains: Who you are (user ID, email, etc.) Some extra info (roles, expiry time, etc.) A digital signature to make sure it’s not tampered." . format of this , y which names thee three things are knows as 
+ChatGPT said:
+Good question 👍
+A JWT (JSON Web Token) always has three parts, separated by dots (.):
+
+
+xxxxx.yyyyy.zzzzz
+These three parts are called:
+	1. Header
+		○ Tells which algorithm is used for signing (e.g., HS256).
+		○ Example:
+
+
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+
+	2. Payload (Claims)
+		○ Contains the actual data (user ID, email, roles, expiry time, etc.).
+		○ Example:
+
+
+{
+  "userId": "123",
+  "email": "ujjawal@example.com",
+  "role": "admin",
+  "exp": 1692790400
+}
+
+	3. Signature
+		○ A cryptographic hash made from Header + Payload + Secret key.
+		○ Purpose: To make sure nobody changes the token data.
+
+
+✅ So in short:
+	• Header = Info about the token (meta data).
+	• Payload = Your actual info (claims).
+	• Signature = Proof that it’s valid and untampered.
+
+
+
+
+------------------------------------------------------------------
+
+
+
+
+1. What is JWT (JSON Web Token)?
+	• JWT is just a string (a token) that is used to prove your identity when you interact with a server.
+	• It is made of three parts:
+
+
+Header.Payload.Signature
+	1. Header → info about token (like algorithm used)
+	2. Payload → your data (user id, email, roles, expiry time)
+	3. Signature → proves token is genuine (not tampered)
+Example:
+
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+.eyJ1c2VySWQiOiIxMjMiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20ifQ
+.sflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+2. Why do we use JWT?
+a) Stateless Authentication
+	• Traditional login: server keeps a session for each user → takes memory.
+	• JWT: server doesn’t store anything. All info is inside the token.
+b) Security
+	• The token has a signature, so no one can change it without the server knowing.
+c) Easy to use across multiple servers
+	• Since server doesn’t store state, JWT works well in scalable apps (cloud, microservices).
+d) Works well for APIs and mobile apps
+	• You can send the token with every request in Authorization: Bearer <token> header.
+
+3. How it works (simple flow)
+	1. User logs in with username/password.
+	2. Server validates credentials → creates JWT → sends to user.
+	3. User stores JWT (localStorage, cookie, etc.).
+	4. User sends requests to server with JWT in Authorization header.
+	5. Server verifies JWT → if valid, allows access.
+✅ Analogy:
+	• Traditional session: like carrying a paper ID that the guard keeps in a register.
+	• JWT: like carrying a self-verifiable stamp on your hand. Guard doesn’t need to check any register — the stamp itself proves your identity.
+
+So basically, JWT is a secure, stateless way to prove who you are and manage access in web/mobile apps.
+
+If you want, I can also draw a small diagram showing JWT login flow which makes it super easy to remember for interviews.
+Do you want me to do that?
+
+
+
+
+
+
+
+1. JWT is used in Authentication first ✅
+	• Authentication = “Who are you?” (login)
+	• When a user logs in with username/password, the server verifies credentials.
+	• If correct, the server creates a JWT and sends it to the user.
+	• That JWT is proof of authentication.
+So the first use of JWT is to prove identity.
+
+2. JWT is also used in Authorization ✅
+	• Authorization = “What can you do?” (permissions)
+	• The JWT contains user info and roles in its payload:
+
+
+{
+  "userId": "123",
+  "role": "admin"
+}
+	• Every time the user sends a request with JWT:
+		○ Server reads the token
+		○ Checks user role/permissions
+		○ Decides if the user is allowed to access that resource
+Example:
+	• JWT says role = "admin" → can access /admin/dashboard
+	• JWT says role = "user" → cannot access /admin/dashboard
+
+✅ In short:
+Concept	JWT’s role
+Authentication	Proves who the user is
+Authorization	Determines what the user can do based on info inside the token
+
+So JWT is used for both — first to authenticate, then to authorize.
+
+If you want, I can also draw a tiny diagram showing JWT in authentication vs authorization — it’s very easy to remember for interviews.
+Do you want me to do that?
+You said:
+now tell me authentication and authorization steps.
+ChatGPT said:
+Sure Ujjawal! Let’s go step by step for Authentication vs Authorization in a simple way, perfect for interviews.
+
+1. Authentication Steps (“Who are you?”)
+	1. User sends credentials
+		○ User enters email/username + password on login page.
+		○ React (frontend) sends this to backend API endpoint: /login.
+	2. Server checks credentials
+		○ Backend looks up the user in database.
+		○ Compares password (after hashing).
+	3. Server creates JWT
+		○ If credentials are correct, server generates a JWT.
+		○ JWT contains user info and expiry time.
+	4. Server sends JWT to frontend
+		○ Usually in response body or in HTTP-only cookie.
+	5. Frontend stores JWT
+		○ Can store in localStorage or cookies.
+	6. User is now authenticated
+		○ Every future request to protected routes must include JWT in Authorization header:
+
