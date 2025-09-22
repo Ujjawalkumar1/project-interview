@@ -224,6 +224,86 @@ function App() {
 export default App;
 ```
 
+--------------------------------------------------------------------------------------------------
+
+1. Function Setup
+
+function App() {
+  const {authUser} = useSelector(store=>store.user);  
+  const {socket} = useSelector(store=>store.socket);  
+  const dispatch = useDispatch();
+
+	• authUser → the currently logged-in user (from Redux store).
+	• socket → the current socket connection (from Redux store).
+	• dispatch → used to send actions to update Redux store.
+So here we are getting user info + socket connection from Redux.
+
+
+2. useEffect Hook
+
+useEffect(()=>{
+  if(authUser){
+
+	• This runs whenever authUser changes (when user logs in or logs out).
+	• If there is a user logged in, we create a socket connection.
+
+
+3. Create Socket Connection
+
+const socketio = io(`${BASE_URL}`, {
+  query:{
+    userId:authUser._id
+  }
+});
+dispatch(setSocket(socketio));
+
+	• io(BASE_URL, {...}) → creates a new Socket.IO connection to the backend server.
+	• We send the user’s ID in query so the backend knows which user is connected.
+	• dispatch(setSocket(socketio)) → save this socket connection in Redux, so the whole app can use it.
+
+
+4. Listen for Online Users
+
+socketio?.on('getOnlineUsers', (onlineUsers)=>{
+  dispatch(setOnlineUsers(onlineUsers))
+});
+
+	• The backend will sometimes send a "getOnlineUsers" event (list of currently online users).
+	• Whenever this happens, we update Redux with setOnlineUsers(onlineUsers).
+	• This way, your frontend always knows which users are online.
+
+
+5. Cleanup (Close Socket)
+
+return () => socketio.close();
+
+	• This runs when the component unmounts OR before creating a new socket connection.
+	• It closes the existing socket to avoid multiple open connections.
+
+
+6. Handle Logout
+
+}else{
+  if(socket){
+    socket.close();
+    dispatch(setSocket(null));
+  }
+}
+
+	• If authUser is not logged in (user logged out):
+		○ Close the socket if it exists.
+		○ Remove it from Redux (setSocket(null)).
+
+
+✅ In Short
+	• When user logs in → create socket connection, save it in Redux, and keep track of online users.
+	• When user logs out or component unmounts → close the socket properly.
+
+
+----------------------------------------------------------------------------------------------------
+
+
+
 ### **Simple Explanation:**
 
 #### **Routing Setup:**
@@ -1318,3 +1398,4 @@ These improvements would make the app more robust, accessible, and production-re
 - **Hot Reload**: Instant feedback during development
 
 This frontend demonstrates modern React development practices with clean architecture, efficient state management, and excellent user experience! 🚀
+
